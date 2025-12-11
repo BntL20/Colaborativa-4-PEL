@@ -609,3 +609,336 @@ int main() {
 
     return 0;
 }
+
+
+/* ==========================================
+   BLOQUE B – PARTE PENDIENTE DE IMPLEMENTAR
+   ==========================================
+   Objetivo del BLOQUE B:
+   ----------------------
+   Implementar TODA la interacción con el usuario:
+     - Menú principal del programa.
+     - Selección / inicio de sesión en un perfil.
+     - Menú de gestión de un perfil:
+         * Ver info del perfil.
+         * Ver contactos.
+         * Añadir contacto.
+         * Modificar contacto.
+         * Eliminar contacto.
+         * Importar contactos desde otro perfil.
+         * Exportar contactos a otro perfil.
+         * Mostrar contactos duplicados.
+         * Cerrar sesión (volver al menú principal).
+
+   IMPORTANTE:
+   -----------
+   - NO modificar la plantilla LinkedList<T>.
+   - NO modificar la clase Contacto.
+   - NO modificar la clase Perfil ni las funciones del BLOQUE A,
+     salvo añadir, dentro de Perfil, un método "eliminarContactoEn"
+     (indicado más abajo).
+   - Seguir usando SIEMPRE punteros y el operador "->" para:
+       * LinkedList<Perfil*>*
+       * LinkedList<Contacto*>*
+       * Perfil* y Contacto*
+   - Todos los mensajes por pantalla deben estar en español.
+   - No usar vector, list ni otros contenedores de la STL.
+   - Evitar "return;" vacíos dentro de if si se puede reestructurar
+     con if/else.
+
+   =======================================================================
+   1) CAMBIOS EN main() (SUSTITUIR EL main ACTUAL)
+   =======================================================================
+   -----
+   1) Modificar el main actual para que tenga esta estructura:
+
+      int main() {
+          // 1. Crear la lista principal de perfiles como puntero
+          //    LinkedList<Perfil*>* perfiles;
+          //    perfiles = new LinkedList<Perfil*>();
+
+          // 2. Llamar a la función de carga inicial:
+          //    inicializarPerfiles(perfiles);
+
+          // 3. Bucle principal del programa:
+          //    - Mostrar menú principal (función mostrarMenuPrincipal()).
+          //    - Leer opción del usuario.
+          //    - Según la opción:
+          //         1) Ver perfiles disponibles
+          //         2) Iniciar sesión en un perfil
+          //         3) Salir del programa
+          //
+          //    Mientras el usuario no elija "Salir", seguir mostrando
+          //    el menú principal.
+
+          // 4. (Opcional) Liberar memoria antes de terminar:
+          //    - Recorrer la lista "perfiles" y hacer delete de cada Perfil*.
+          //    - Hacer delete de "perfiles".
+          //
+          //    NOTA: la liberación de memoria no suele ser exigida en detalle
+          //    en esta práctica, pero se puede incluir si se quiere.
+
+          // 5. Terminar el programa con "return 0;".
+      }
+
+   =======================================================================
+   2) FUNCIONES A CREAR PARA EL MENÚ PRINCIPAL
+   =======================================================================
+
+   -----------------------------------------------------------------------
+   2.1) Función mostrarMenuPrincipal
+   -----------------------------------------------------------------------
+   //
+   // int mostrarMenuPrincipal() {
+   //     // Muestra por pantalla:
+   //     //   1. Ver perfiles disponibles
+   //     //   2. Iniciar sesión en un perfil
+   //     //   3. Salir
+   //     //
+   //     // Pide al usuario una opción (int) con cin.
+   //     // Devuelve la opción elegida.
+   // }
+
+   -----------------------------------------------------------------------
+   2.2) Función mostrarPerfiles
+   -----------------------------------------------------------------------
+   //
+   // void mostrarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
+   //     // Recorre la lista de perfiles:
+   //     //   int total = listaPerfiles->getSize();
+   //     //   Para i = 0..total-1:
+   //     //     Perfil* p = listaPerfiles->obtener_en(i);
+   //     //     Muestra:
+   //     //        - Número de perfil (i+1)
+   //     //        - Nombre de usuario (p->getNombreUsuario())
+   //     //        - Número de contactos (p->getNumeroContactos())
+   //     //
+   //     // Mensajes en español y claros.
+   // }
+
+   -----------------------------------------------------------------------
+   2.3) Función seleccionarPerfil
+   -----------------------------------------------------------------------
+   //
+   // Perfil* seleccionarPerfil(LinkedList<Perfil*>* listaPerfiles) {
+   //     // 1) Llamar a mostrarPerfiles(listaPerfiles).
+   //     // 2) Preguntar al usuario qué perfil quiere seleccionar (por número).
+   //     // 3) Validar que el número está en el rango correcto:
+   //     //      1 <= numero <= listaPerfiles->getSize()
+   //     // 4) Convertir el número a índice interno:
+   //     //      indice = numero - 1;
+   //     // 5) Obtener el perfil:
+   //     //      Perfil* seleccionado = listaPerfiles->obtener_en(indice);
+   //     // 6) Devolver "seleccionado".
+   //     //
+   //     // Si la entrada no es válida, mostrar un mensaje de error y
+   //     // pedir de nuevo la opción hasta que sea correcta.
+   // }
+
+   // En el main, cuando el usuario elija "Iniciar sesión en un perfil",
+   // se hará algo como:
+   //
+   //   Perfil* perfilActual = seleccionarPerfil(perfiles);
+   //   if (perfilActual != nullptr) {
+   //       // Entrar en el menú de perfil:
+   //       menuPerfil(perfilActual, perfiles);
+   //   }
+
+   =======================================================================
+   3) FUNCIONES PARA EL MENÚ DE UN PERFIL
+   =======================================================================
+
+   -----------------------------------------------------------------------
+   3.1) Función menuPerfil
+   -----------------------------------------------------------------------
+   //
+   // void menuPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
+   //     // Bucle que muestre un menú parecido a:
+   //     //
+   //     //   1. Ver información del perfil
+   //     //   2. Ver lista de contactos
+   //     //   3. Añadir contacto
+   //     //   4. Modificar contacto
+   //     //   5. Eliminar contacto
+   //     //   6. Importar contactos desde otro perfil
+   //     //   7. Exportar contactos a otro perfil
+   //     //   8. Mostrar contactos duplicados
+   //     //   9. Cerrar sesión (volver al menú principal)
+   //     //
+   //     //  - Leer opción con cin.
+   //     //  - Según la opción, llamar a las funciones correspondientes:
+   //     //       mostrarInfoPerfil(perfilActual);
+   //     //       mostrarContactosPerfil(perfilActual);
+   //     //       aniadirContactoDesdeTeclado(perfilActual);
+   //     //       modificarContactoPerfil(perfilActual);
+   //     //       eliminarContactoPerfil(perfilActual);
+   //     //       importarDesdeOtroPerfil(perfilActual, listaPerfiles);
+   //     //       exportarAHaciaOtroPerfil(perfilActual, listaPerfiles);
+   //     //       perfilActual->detectarContactosDuplicados();
+   //     //
+   //     //  - El bucle termina cuando el usuario elija la opción de "Cerrar sesión".
+   // }
+
+   -----------------------------------------------------------------------
+   3.2) Función mostrarInfoPerfil
+   -----------------------------------------------------------------------
+   //
+   // void mostrarInfoPerfil(Perfil* perfilActual) {
+   //     // Mostrar:
+   //     //   - Nombre de usuario: perfilActual->getNombreUsuario()
+   //     //   - Descripción: perfilActual->getDescripcion()
+   //     //   - Número de contactos: perfilActual->getNumeroContactos()
+   // }
+
+   -----------------------------------------------------------------------
+   3.3) Función mostrarContactosPerfil
+   -----------------------------------------------------------------------
+   //
+   // void mostrarContactosPerfil(Perfil* perfilActual) {
+   //     // int total = perfilActual->getNumeroContactos();
+   //     // Si total == 0:
+   //     //    Mostrar: "Este perfil no tiene contactos aún."
+   //     // Si hay contactos:
+   //     //    Para i = 0..total-1:
+   //     //        Contacto* c = perfilActual->getContactoEn(i);
+   //     //        Mostrar:
+   //     //           - Número de contacto (i+1)
+   //     //           - Nombre
+   //     //           - Teléfono
+   //     //           - Edad
+   //     //           - Ciudad
+   //     //           - Descripción
+   // }
+
+   -----------------------------------------------------------------------
+   3.4) Función aniadirContactoDesdeTeclado
+   -----------------------------------------------------------------------
+   //
+   // void aniadirContactoDesdeTeclado(Perfil* perfilActual) {
+   //     // 1) Pedir por teclado (cin):
+   //     //      - nombre
+   //     //      - telefono
+   //     //      - edad
+   //     //      - ciudad
+   //     //      - descripcion
+   //     //
+   //     // 2) Comprobar si ya existe un contacto con ese teléfono:
+   //     //      bool existe = perfilActual->existeTelefono(telefono);
+   //     //      Si existe:
+   //     //         - Mostrar mensaje de error:
+   //     //           "Ya existe un contacto con ese teléfono en este perfil."
+   //     //         - No crear el contacto.
+   //     //
+   //     // 3) Si no existe:
+   //     //      - Crear el contacto:
+   //     //           Contacto* nuevo = new Contacto(nombre, telefono, edad, ciudad, descripcion);
+   //     //      - Añadirlo al perfil:
+   //     //           perfilActual->aniadirContactoFinal(nuevo);
+   //     //      - Mostrar mensaje de éxito.
+   // }
+
+   -----------------------------------------------------------------------
+   3.5) Función modificarContactoPerfil
+   -----------------------------------------------------------------------
+   //
+   // void modificarContactoPerfil(Perfil* perfilActual) {
+   //     // 1) Llamar a mostrarContactosPerfil(perfilActual).
+   //     // 2) Si no hay contactos, salir de la función (no hacer nada más).
+   //     // 3) Pedir al usuario qué contacto quiere modificar (número 1..N).
+   //     // 4) Convertir a índice interno: indice = numero - 1.
+   //     // 5) Obtener el contacto:
+   //     //      Contacto* c = perfilActual->getContactoEn(indice);
+   //     // 6) Pedir nuevos datos para el contacto (nombre, teléfono, etc.).
+   //     // 7) Actualizar los campos con los setters:
+   //     //      c->setNombre(...)
+   //     //      c->setTelefono(...)
+   //     //      c->setEdad(...)
+   //     //      c->setCiudad(...)
+   //     //      c->setDescripcion(...)
+   //     // 8) Mostrar mensaje indicando que el contacto se ha modificado.
+   // }
+
+   -----------------------------------------------------------------------
+   3.6) Método eliminarContactoEn (DENTRO DE LA CLASE Perfil)
+   -----------------------------------------------------------------------
+   //
+   // Añadir un método:
+   //
+   // void eliminarContactoEn(int posicion) {
+   //     // 1) Comprobar que 0 <= posicion < getNumeroContactos().
+   //     // 2) Usar la lista de contactos para extraer el puntero:
+   //     //      Contacto* c = contactos->extract_at(posicion);
+   //     // 3) Si c no es nulo, hacer:
+   //     //      delete c;
+   //     //    para liberar la memoria del contacto.
+   // }
+
+   -----------------------------------------------------------------------
+   3.7) Función eliminarContactoPerfil
+   -----------------------------------------------------------------------
+   //
+   // void eliminarContactoPerfil(Perfil* perfilActual) {
+   //     // 1) Llamar a mostrarContactosPerfil(perfilActual).
+   //     // 2) Si no hay contactos, salir.
+   //     // 3) Pedir al usuario el número de contacto a eliminar (1..N).
+   //     // 4) Convertir a índice interno: indice = numero - 1.
+   //     // 5) Llamar a:
+   //     //      perfilActual->eliminarContactoEn(indice);
+   //     // 6) Mostrar mensaje: "Contacto eliminado correctamente."
+   // }
+
+   -----------------------------------------------------------------------
+   3.8) Función importarDesdeOtroPerfil
+   -----------------------------------------------------------------------
+   //
+   // void importarDesdeOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
+   //     // 1) Mostrar listado de perfiles disponibles:
+   //     //      mostrarPerfiles(listaPerfiles);
+   //     // 2) Preguntar al usuario desde qué perfil quiere importar contactos.
+   //     // 3) Asegurarse de que no elige el mismo perfil donde está logueado.
+   //     // 4) Calcular índice interno y obtener:
+   //     //      Perfil* origen = listaPerfiles->obtener_en(indiceOrigen);
+   //     // 5) Llamar a:
+   //     //      perfilActual->importarContactosDesde(origen);
+   // }
+
+   -----------------------------------------------------------------------
+   3.9) Función exportarAHaciaOtroPerfil
+   -----------------------------------------------------------------------
+   //
+   // void exportarAHaciaOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
+   //     // 1) Mostrar listado de perfiles disponibles:
+   //     //      mostrarPerfiles(listaPerfiles);
+   //     // 2) Preguntar al usuario a qué perfil quiere exportar contactos.
+   //     // 3) Asegurarse de que no elige el mismo perfil como destino.
+   //     // 4) Calcular índice interno y obtener:
+   //     //      Perfil* destino = listaPerfiles->obtener_en(indiceDestino);
+   //     // 5) Llamar a la función libre ya creada en el BLOQUE A:
+   //     //      exportarContactos(perfilActual, destino);
+   // }
+
+   -----------------------------------------------------------------------
+   3.10) Mostrar contactos duplicados
+   -----------------------------------------------------------------------
+   // En el menú de perfil, una opción debe llamar simplemente a:
+   //
+   //   perfilActual->detectarContactosDuplicados();
+   //
+   // Esta función ya está implementada en el BLOQUE A y mostrará
+   // por pantalla los contactos que comparten teléfono en el mismo perfil.
+
+   =======================================================================
+   NOTA FINAL
+   =======================================================================
+   - Solo tiene que:
+   //   * Implementar las funciones descritas arriba (menús e interacción).
+   //   * Añadir el método eliminarContactoEn dentro de Perfil.
+   //   * Sustituir el main sencillo por el main con menús.
+   //
+   // - NO debe cambiar la lógica de LinkedList, Contacto, Perfil ni
+   //   las funciones de inicialización e importación/exportación del BLOQUE A.
+   //
+   // - Todas las entradas y salidas deben ser claras, en español, y
+   //   usando punteros y "->" para trabajar con perfiles y contactos.
+*/
+
