@@ -1,21 +1,14 @@
 #include <iostream>
 #include <string>
 
-// ======================================================
-// Lista enlazada genérica (plantilla propia)
-// - NO usa vector, list, ni contenedores de la STL
-// - Almacena datos de tipo T (en este proyecto, punteros)
-// ======================================================
-
+// Lista enlazada genérica
 template <typename T>
 class LinkedList {
 private:
-    // --------------------------------------------------
     // Clase interna Nodo: cada elemento de la lista
-    // --------------------------------------------------
     class Nodo {
     public:
-        T data;       // dato almacenado (puede ser un puntero)
+        T data;       // dato almacenado
         Nodo* next;   // puntero al siguiente nodo
 
         // Constructor por defecto
@@ -39,19 +32,14 @@ private:
     int size;
 
 public:
-    // --------------------------------------------------
     // Constructor: crea una lista vacía
-    // --------------------------------------------------
     LinkedList() {
         first = nullptr;
         last = nullptr;
         size = 0;
     }
 
-    // --------------------------------------------------
     // Destructor: libera todos los nodos
-    // (NO borra el contenido de data si T es puntero)
-    // --------------------------------------------------
     ~LinkedList() {
         limpiar();
     }
@@ -66,9 +54,7 @@ public:
         return size;
     }
 
-    // --------------------------------------------------
     // Inserta un elemento al principio de la lista
-    // --------------------------------------------------
     void insertar_cabeza(T e) {
         Nodo* nodo = new Nodo(e);
 
@@ -77,7 +63,7 @@ public:
             first = nodo;
             last = nodo;
         } else {
-            // Lista no vacía: enganchamos delante del primero
+            // Lista no vacía: insertamos delante del primero
             nodo->next = first;
             first = nodo;
         }
@@ -85,9 +71,7 @@ public:
         size = size + 1;
     }
 
-    // --------------------------------------------------
     // Inserta un elemento al final de la lista
-    // --------------------------------------------------
     void insertar_cola(T e) {
         Nodo* nodo = new Nodo(e);
 
@@ -96,7 +80,7 @@ public:
             first = nodo;
             last = nodo;
         } else {
-            // Lista no vacía: enganchamos detrás del último
+            // Lista no vacía: insertamos detrás del último
             last->next = nodo;
             last = nodo;
         }
@@ -104,9 +88,7 @@ public:
         size = size + 1;
     }
 
-    // --------------------------------------------------
-    // Inserta un elemento en la posición pos (0..size)
-    // --------------------------------------------------
+    // Inserta un elemento en la posición pos
     void insert_at(T e, int pos) {
         if (pos >= 0 && pos <= size) {
             if (pos == 0) {
@@ -137,9 +119,7 @@ public:
         }
     }
 
-    // --------------------------------------------------
     // Extrae (elimina) el primer elemento y lo devuelve
-    // --------------------------------------------------
     T extraer_cabeza() {
         if (first == nullptr) {
             std::cout << "Lista vacía, no se puede extraer" << std::endl;
@@ -165,9 +145,7 @@ public:
         return aux;
     }
 
-    // --------------------------------------------------
     // Extrae (elimina) el último elemento y lo devuelve
-    // --------------------------------------------------
     T extraer_cola() {
         if (first == nullptr) {
             std::cout << "Lista vacía, no se puede extraer" << std::endl;
@@ -199,9 +177,7 @@ public:
         return aux;
     }
 
-    // --------------------------------------------------
     // Extrae y devuelve el elemento de la posición pos
-    // --------------------------------------------------
     T extract_at(int pos) {
         if (first == nullptr) {
             std::cout << "Lista vacía, no se puede extraer" << std::endl;
@@ -241,9 +217,7 @@ public:
         return aux;
     }
 
-    // --------------------------------------------------
     // Devuelve el dato de la posición pos (sin borrar)
-    // --------------------------------------------------
     T obtener_en(int pos) {
         if (pos < 0 || pos >= size) {
             std::cout << "Posición no válida" << std::endl;
@@ -260,9 +234,7 @@ public:
         return actual->data;
     }
 
-    // --------------------------------------------------
     // Elimina todos los nodos de la lista
-    // --------------------------------------------------
     void limpiar() {
         Nodo* actual = first;
 
@@ -278,10 +250,8 @@ public:
     }
 };
 
-// ======================================================
-// Clase Contacto: representa un contacto de un perfil
-// ======================================================
 
+// Clase Contacto: representa un contacto de un perfil
 class Contacto {
 private:
     std::string nombre;
@@ -351,12 +321,8 @@ public:
     }
 };
 
-// ======================================================
 // Clase Perfil: representa un usuario de la "app"
 // Cada perfil tiene su propia lista enlazada de contactos
-// (lista guardada como puntero, para usar siempre ->)
-// ======================================================
-
 class Perfil {
 private:
     std::string nombreUsuario;             // nombre del perfil
@@ -368,7 +334,7 @@ public:
     Perfil() {
         nombreUsuario = "";
         descripcion = "";
-        // Creamos la lista de contactos en el montón
+        // Creamos la lista de contactos
         contactos = new LinkedList<Contacto*>();
     }
 
@@ -380,9 +346,7 @@ public:
     }
 
     // Destructor: podría liberar contactos y lista.
-    // En esta práctica no lo usamos en main, pero queda definido.
     ~Perfil() {
-        // Si tu profe no quiere destructores, puedes comentar este bloque entero
         if (contactos != nullptr) {
             int total = contactos->getSize();
             int i = 0;
@@ -431,14 +395,12 @@ public:
     }
 
     // Añade un contacto al final de la lista
-    void aniadirContactoFinal(Contacto* contacto) {
+    void agregarContactoFinal(Contacto* contacto) {
         contactos->insertar_cola(contacto);
     }
 
-    // --------------------------------------------------
     // Comprueba si ya existe un contacto con ese teléfono
     // (se usa para evitar duplicados al importar)
-    // --------------------------------------------------
     bool existeTelefono(std::string telefono) {
         int total = contactos->getSize();
         int i = 0;
@@ -456,11 +418,9 @@ public:
         return false;
     }
 
-    // --------------------------------------------------
     // Importa contactos desde otro perfil
     // - Recorre los contactos del perfil origen
     // - Copia solo los que no tengan teléfono repetido
-    // --------------------------------------------------
     void importarContactosDesde(Perfil* origen) {
         if (origen != nullptr) {
             int total = origen->getNumeroContactos();
@@ -477,10 +437,10 @@ public:
                         // Creamos una copia del contacto original
                         Contacto* copia = new Contacto(original->getNombre(),original->getTelefono(),original->getEdad(),original->getCiudad(),original->getDescripcion());
                         // Añadimos la copia a este perfil (destino)
-                        aniadirContactoFinal(copia);
+                        agregarContactoFinal(copia);
                         importados = importados + 1;
                     } else {
-                        // Teléfono repetido → se cuenta como duplicado
+                        // Si el teléfono es repetido, se cuenta como duplicado
                         duplicados = duplicados + 1;
                     }
                 }
@@ -500,10 +460,7 @@ public:
         }
     }
 
-    // --------------------------------------------------
-    // Busca teléfonos repetidos dentro del mismo perfil
-    // y los muestra por pantalla
-    // --------------------------------------------------
+    // Busca teléfonos repetidos dentro del mismo perfil y los muestra por pantalla
     void detectarContactosDuplicados() {
         int total = contactos->getSize();
         bool hayDuplicados = false;
@@ -542,61 +499,53 @@ public:
     }
 };
 
-// ------------------------------------------------------
-// Función libre: exporta contactos de un perfil a otro
+// Exporta contactos de un perfil a otro
 // (internamente usa importarContactosDesde del destino)
-// ------------------------------------------------------
-
 void exportarContactos(Perfil* origen, Perfil* destino) {
     if (origen != nullptr && destino != nullptr) {
         destino->importarContactosDesde(origen);
     }
 }
 
-// ------------------------------------------------------
 // Carga inicial de perfiles
 // - Recibe un puntero a LinkedList<Perfil*>
 // - Crea 3 perfiles con al menos 5 contactos cada uno
 // - Inserta los perfiles en la lista con ->insertar_cola
-// ------------------------------------------------------
-
 void inicializarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
-    // ---------- Perfil 1 ----------
+    // Perfil 1
     Perfil* p1 = new Perfil("ana", "Le gusta la música y viajar");
-    p1->aniadirContactoFinal(new Contacto("Carlos",  "111111111", 25, "Madrid",   "Amigo de la universidad"));
-    p1->aniadirContactoFinal(new Contacto("Lucía",   "222222222", 23, "Valencia", "Compañera de trabajo"));
-    p1->aniadirContactoFinal(new Contacto("Miguel",  "333333333", 28, "Sevilla",  "Conocido del gimnasio"));
-    p1->aniadirContactoFinal(new Contacto("Sofía",   "444444444", 24, "Bilbao",   "Amiga de la infancia"));
-    p1->aniadirContactoFinal(new Contacto("Raúl",    "555555555", 29, "Zaragoza", "Contacto de un viaje"));
+    p1->agregarContactoFinal(new Contacto("Carlos",  "111111111", 25, "Madrid",   "Amigo de la universidad"));
+    p1->agregarContactoFinal(new Contacto("Lucía",   "222222222", 23, "Valencia", "Compañera de trabajo"));
+    p1->agregarContactoFinal(new Contacto("Miguel",  "333333333", 28, "Sevilla",  "Conocido del gimnasio"));
+    p1->agregarContactoFinal(new Contacto("Sofía",   "444444444", 24, "Bilbao",   "Amiga de la infancia"));
+    p1->agregarContactoFinal(new Contacto("Raúl",    "555555555", 29, "Zaragoza", "Contacto de un viaje"));
 
-    // ---------- Perfil 2 ----------
+    // Perfil 2
     Perfil* p2 = new Perfil("borja", "Aficionado al deporte y al cine");
-    p2->aniadirContactoFinal(new Contacto("Irene",   "666666666", 26, "Madrid",    "Compañera de clase"));
-    p2->aniadirContactoFinal(new Contacto("Diego",   "777777777", 30, "Barcelona", "Amigo de fiestas"));
-    p2->aniadirContactoFinal(new Contacto("Natalia", "888888888", 27, "Granada",   "Amiga de Erasmus"));
-    p2->aniadirContactoFinal(new Contacto("Pedro",   "999999999", 31, "Málaga",    "Conocido del trabajo"));
-    p2->aniadirContactoFinal(new Contacto("Laura",   "101010101", 22, "Valladolid","Amiga del gimnasio"));
+    p2->agregarContactoFinal(new Contacto("Irene",   "666666666", 26, "Madrid",    "Compañera de clase"));
+    p2->agregarContactoFinal(new Contacto("Diego",   "777777777", 30, "Barcelona", "Amigo de fiestas"));
+    p2->agregarContactoFinal(new Contacto("Natalia", "888888888", 27, "Granada",   "Amiga de Erasmus"));
+    p2->agregarContactoFinal(new Contacto("Pedro",   "999999999", 31, "Málaga",    "Conocido del trabajo"));
+    p2->agregarContactoFinal(new Contacto("Laura",   "101010101", 22, "Valladolid","Amiga del gimnasio"));
 
-    // ---------- Perfil 3 ----------
+    // Perfil 3
     Perfil* p3 = new Perfil("carla", "Le encantan los videojuegos y la tecnología");
-    p3->aniadirContactoFinal(new Contacto("Javier",   "202020202", 24, "Madrid",   "Amigo de instituto"));
-    p3->aniadirContactoFinal(new Contacto("Patricia", "303030303", 29, "Valencia", "Compañera de piso"));
-    p3->aniadirContactoFinal(new Contacto("Hugo",     "404040404", 27, "A Coruña", "Amigo de vacaciones"));
-    p3->aniadirContactoFinal(new Contacto("Elena",    "505050505", 25, "Murcia",   "Conocida de un curso"));
-    p3->aniadirContactoFinal(new Contacto("Sergio",   "606060606", 28, "Oviedo",   "Amigo de la universidad"));
+    p3->agregarContactoFinal(new Contacto("Javier",   "202020202", 24, "Madrid",   "Amigo de instituto"));
+    p3->agregarContactoFinal(new Contacto("Patricia", "303030303", 29, "Valencia", "Compañera de piso"));
+    p3->agregarContactoFinal(new Contacto("Hugo",     "404040404", 27, "A Coruña", "Amigo de vacaciones"));
+    p3->agregarContactoFinal(new Contacto("Elena",    "505050505", 25, "Murcia",   "Conocida de un curso"));
+    p3->agregarContactoFinal(new Contacto("Sergio",   "606060606", 28, "Oviedo",   "Amigo de la universidad"));
 
-    // Insertamos los perfiles en la lista usando puntero y ->
+    // Insertamos los perfiles en la lista
     listaPerfiles->insertar_cola(p1);
     listaPerfiles->insertar_cola(p2);
     listaPerfiles->insertar_cola(p3);
 }
 
-// ------------------------------------------------------
+
 // main mínimo del BLOQUE A
 // - Crea la lista de perfiles como puntero
 // - Llama a inicializarPerfiles con puntero
-// ------------------------------------------------------
-
 int main() {
     // Creamos la lista principal de perfiles como puntero
     LinkedList<Perfil*>* perfiles;
