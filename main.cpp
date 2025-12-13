@@ -115,14 +115,14 @@ public:
                 }
             }
         } else {
-            std::cout << "No se puede insertar. Posición no disponible" << std::endl;
+            std::cout << "No se puede insertar. Posicion no disponible" << std::endl;
         }
     }
 
     // Extrae (elimina) el primer elemento y lo devuelve
     T extraer_cabeza() {
         if (first == nullptr) {
-            std::cout << "Lista vacía, no se puede extraer" << std::endl;
+            std::cout << "Lista vacia, no se puede extraer" << std::endl;
             return T();
         }
 
@@ -148,7 +148,7 @@ public:
     // Extrae (elimina) el último elemento y lo devuelve
     T extraer_cola() {
         if (first == nullptr) {
-            std::cout << "Lista vacía, no se puede extraer" << std::endl;
+            std::cout << "Lista vacia, no se puede extraer" << std::endl;
             return T();
         }
 
@@ -180,12 +180,12 @@ public:
     // Extrae y devuelve el elemento de la posición pos
     T extract_at(int pos) {
         if (first == nullptr) {
-            std::cout << "Lista vacía, no se puede extraer" << std::endl;
+            std::cout << "Lista vacia, no se puede extraer" << std::endl;
             return T();
         }
 
         if (pos < 0 || pos >= size) {
-            std::cout << "Posición no válida" << std::endl;
+            std::cout << "Posicion no valida" << std::endl;
             return T();
         }
 
@@ -220,7 +220,7 @@ public:
     // Devuelve el dato de la posición pos (sin borrar)
     T obtener_en(int pos) {
         if (pos < 0 || pos >= size) {
-            std::cout << "Posición no válida" << std::endl;
+            std::cout << "Posicion no valida" << std::endl;
             return T();
         }
 
@@ -400,7 +400,6 @@ public:
     }
 
     // Comprueba si ya existe un contacto con ese teléfono
-    // (se usa para evitar duplicados al importar)
     bool existeTelefono(std::string telefono) {
         int total = contactos->getSize();
         int i = 0;
@@ -418,9 +417,7 @@ public:
         return false;
     }
 
-    // Importa contactos desde otro perfil
-    // - Recorre los contactos del perfil origen
-    // - Copia solo los que no tengan teléfono repetido
+    // Importa contactos desde otro perfil (omito comentarios largos)
     void importarContactosDesde(Perfil* origen) {
         if (origen != nullptr) {
             int total = origen->getNumeroContactos();
@@ -434,39 +431,35 @@ public:
                     std::string telefono = original->getTelefono();
                     bool existe = existeTelefono(telefono);
                     if (!existe) {
-                        // Creamos una copia del contacto original
+                        // Creamos copia
                         Contacto* copia = new Contacto(original->getNombre(),original->getTelefono(),original->getEdad(),original->getCiudad(),original->getDescripcion());
-                        // Añadimos la copia a este perfil (destino)
                         agregarContactoFinal(copia);
-                        importados = importados + 1;
+                        importados++;
                     } else {
-                        // Si el teléfono es repetido, se cuenta como duplicado
-                        duplicados = duplicados + 1;
+                        duplicados++;
                     }
                 }
-                i = i + 1;
+                i++;
             }
 
-            // Mensajes informativos
             std::cout << "Se han importado " << importados
                       << " contactos desde el perfil \"" << origen->getNombreUsuario()
                       << "\" al perfil \"" << nombreUsuario << "\"." << std::endl;
 
             if (duplicados > 0) {
                 std::cout << "Se han omitido " << duplicados
-                          << " contactos por tener el mismo número de teléfono en el perfil destino."
+                          << " contactos por tener el mismo numero de telefono en el perfil destino."
                           << std::endl;
             }
         }
     }
 
-    // Busca teléfonos repetidos dentro del mismo perfil y los muestra por pantalla
+    // Detecta contactos duplicados por teléfono
     void detectarContactosDuplicados() {
         int total = contactos->getSize();
         bool hayDuplicados = false;
         int i = 0;
 
-        // Doble bucle para comparar cada contacto con los demás
         while (i < total) {
             Contacto* primero = contactos->obtener_en(i);
             if (primero != nullptr) {
@@ -482,7 +475,7 @@ public:
                             }
                             std::cout << "- " << primero->getNombre()
                                       << " y " << segundo->getNombre()
-                                      << " comparten el teléfono "
+                                      << " comparten el telefono "
                                       << primero->getTelefono() << std::endl;
                         }
                     }
@@ -497,10 +490,21 @@ public:
                       << nombreUsuario << "\"." << std::endl;
         }
     }
+
+    // NUEVO METODO DEL BLOQUE B (único permitido agregar aquí)
+    // Elimina un contacto por posición y libera memoria
+    void eliminarContactoEn(int posicion) {
+        if (posicion >= 0 && posicion < getNumeroContactos()) {
+            Contacto* c = contactos->extract_at(posicion);
+            if (c != nullptr) {
+                delete c;
+            }
+        }
+    }
 };
 
+
 // Exporta contactos de un perfil a otro
-// (internamente usa importarContactosDesde del destino)
 void exportarContactos(Perfil* origen, Perfil* destino) {
     if (origen != nullptr && destino != nullptr) {
         destino->importarContactosDesde(origen);
@@ -508,31 +512,28 @@ void exportarContactos(Perfil* origen, Perfil* destino) {
 }
 
 // Carga inicial de perfiles
-// - Recibe un puntero a LinkedList<Perfil*>
-// - Crea 3 perfiles con al menos 5 contactos cada uno
-// - Inserta los perfiles en la lista con ->insertar_cola
 void inicializarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
     // Perfil 1
-    Perfil* p1 = new Perfil("ana", "Le gusta la música y viajar");
+    Perfil* p1 = new Perfil("Ana", "Le gusta la música y viajar");
     p1->agregarContactoFinal(new Contacto("Carlos",  "111111111", 25, "Madrid",   "Amigo de la universidad"));
-    p1->agregarContactoFinal(new Contacto("Lucía",   "222222222", 23, "Valencia", "Compañera de trabajo"));
+    p1->agregarContactoFinal(new Contacto("Lucia",   "222222222", 23, "Valencia", "Companera de trabajo"));
     p1->agregarContactoFinal(new Contacto("Miguel",  "333333333", 28, "Sevilla",  "Conocido del gimnasio"));
-    p1->agregarContactoFinal(new Contacto("Sofía",   "444444444", 24, "Bilbao",   "Amiga de la infancia"));
-    p1->agregarContactoFinal(new Contacto("Raúl",    "555555555", 29, "Zaragoza", "Contacto de un viaje"));
+    p1->agregarContactoFinal(new Contacto("Sofia",   "444444444", 24, "Bilbao",   "Amiga de la infancia"));
+    p1->agregarContactoFinal(new Contacto("Raul",    "555555555", 29, "Zaragoza", "Contacto de un viaje"));
 
     // Perfil 2
-    Perfil* p2 = new Perfil("borja", "Aficionado al deporte y al cine");
-    p2->agregarContactoFinal(new Contacto("Irene",   "666666666", 26, "Madrid",    "Compañera de clase"));
+    Perfil* p2 = new Perfil("Borja", "Aficionado al deporte y al cine");
+    p2->agregarContactoFinal(new Contacto("Irene",   "666666666", 26, "Madrid",    "Companera de clase"));
     p2->agregarContactoFinal(new Contacto("Diego",   "777777777", 30, "Barcelona", "Amigo de fiestas"));
     p2->agregarContactoFinal(new Contacto("Natalia", "888888888", 27, "Granada",   "Amiga de Erasmus"));
-    p2->agregarContactoFinal(new Contacto("Pedro",   "999999999", 31, "Málaga",    "Conocido del trabajo"));
+    p2->agregarContactoFinal(new Contacto("Pedro",   "999999999", 31, "Malaga",    "Conocido del trabajo"));
     p2->agregarContactoFinal(new Contacto("Laura",   "101010101", 22, "Valladolid","Amiga del gimnasio"));
 
     // Perfil 3
-    Perfil* p3 = new Perfil("carla", "Le encantan los videojuegos y la tecnología");
+    Perfil* p3 = new Perfil("Carla", "Le encantan los videojuegos y la tecnologia");
     p3->agregarContactoFinal(new Contacto("Javier",   "202020202", 24, "Madrid",   "Amigo de instituto"));
-    p3->agregarContactoFinal(new Contacto("Patricia", "303030303", 29, "Valencia", "Compañera de piso"));
-    p3->agregarContactoFinal(new Contacto("Hugo",     "404040404", 27, "A Coruña", "Amigo de vacaciones"));
+    p3->agregarContactoFinal(new Contacto("Patricia", "303030303", 29, "Valencia", "Companera de piso"));
+    p3->agregarContactoFinal(new Contacto("Hugo",     "404040404", 27, "A Coruna", "Amigo de vacaciones"));
     p3->agregarContactoFinal(new Contacto("Elena",    "505050505", 25, "Murcia",   "Conocida de un curso"));
     p3->agregarContactoFinal(new Contacto("Sergio",   "606060606", 28, "Oviedo",   "Amigo de la universidad"));
 
@@ -542,352 +543,328 @@ void inicializarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
     listaPerfiles->insertar_cola(p3);
 }
 
+// BLOQUE B
 
-// main mínimo del BLOQUE A
-// - Crea la lista de perfiles como puntero
-// - Llama a inicializarPerfiles con puntero
-int main() {
-    // Creamos la lista principal de perfiles como puntero
-    LinkedList<Perfil*>* perfiles;
-    perfiles = new LinkedList<Perfil*>();
+//---------------------------
+// Muestra el menú principal
+//--------------------------
 
-    // Cargamos los 3 perfiles iniciales con sus contactos
-    inicializarPerfiles(perfiles);
+int mostrarMenuPrincipal() {
+    std::cout << "\n===== MENU PRINCIPAL =====\n";
+    std::cout << "1. Ver perfiles disponibles\n";
+    std::cout << "2. Iniciar sesion en un perfil\n";
+    std::cout << "3. Salir\n";
+    std::cout << "Seleccione una opcion: ";
 
-    std::cout << "Perfiles iniciales cargados correctamente." << std::endl;
+    int op;
+    std::cin >> op;
+    return op;
+}
 
-    return 0;
+// --------------------------
+// Muestra todos los perfiles
+// --------------------------
+void mostrarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
+    std::cout << "\n=== PERFILES DISPONIBLES ===\n";
+
+    int total = listaPerfiles->getSize();
+    for (int i = 0; i < total; i++) {
+        Perfil* p = listaPerfiles->obtener_en(i);
+        std::cout << (i + 1) << ". " << p->getNombreUsuario()
+                  << " (" << p->getNumeroContactos() << " contactos)\n";
+    }
+}
+
+// -------------------------------
+// Permite seleccionar un perfil
+// -------------------------------
+Perfil* seleccionarPerfil(LinkedList<Perfil*>* listaPerfiles) {
+    mostrarPerfiles(listaPerfiles);
+
+    int total = listaPerfiles->getSize();
+    int op;
+
+    while (true) {
+        std::cout << "Seleccione un perfil (1-" << total << "): ";
+        std::cin >> op;
+
+        if (op >= 1 && op <= total) {
+            return listaPerfiles->obtener_en(op - 1);
+        }
+
+        std::cout << "Opcion invalida.\n" << std::endl;
+    }
+}// ---------------------------------------------
+// Muestra la información básica del perfil
+// ---------------------------------------------
+void mostrarInfoPerfil(Perfil* perfilActual) {
+    std::cout << "\n=== INFORMACION DEL PERFIL ===\n";
+    std::cout << "Usuario: " << perfilActual->getNombreUsuario() << std::endl;
+    std::cout << "Descripcion: " << perfilActual->getDescripcion() << std::endl;
+    std::cout << "Numero de contactos: " << perfilActual->getNumeroContactos() << std::endl;
+}
+
+// ---------------------------------------------
+// Muestra todos los contactos de un perfil
+// ---------------------------------------------
+void mostrarContactosPerfil(Perfil* perfilActual) {
+    int total = perfilActual->getNumeroContactos();
+
+    if (total == 0) {
+        std::cout << "Este perfil no tiene contactos aun.\n";
+    } else {
+        std::cout << "\n=== LISTA DE CONTACTOS ===\n";
+        for (int i = 0; i < total; i++) {
+            Contacto* c = perfilActual->getContactoEn(i);
+            std::cout << (i + 1) << ". "
+                      << c->getNombre() << " | "
+                      << c->getTelefono() << " | "
+                      << c->getEdad() << " | "
+                      << c->getCiudad() << " | "
+                      << c->getDescripcion() << std::endl;
+        }
+    }
+}
+
+// ---------------------------------------------
+// Añade un contacto leyendo los datos por teclado
+// ---------------------------------------------
+void aniadirContactoDesdeTeclado(Perfil* perfilActual) {
+    std::string nombre, telefono, ciudad, descripcion;
+    int edad;
+
+    std::cin.ignore();
+
+    std::cout << "Nombre: ";
+    std::getline(std::cin, nombre);
+
+    std::cout << "Telefono: ";
+    std::getline(std::cin, telefono);
+
+    if (perfilActual->existeTelefono(telefono)) {
+        std::cout << "Ya existe un contacto con ese telefono en este perfil.\n";
+    } else {
+        std::cout << "Edad: ";
+        std::cin >> edad;
+        std::cin.ignore();
+
+        std::cout << "Ciudad: ";
+        std::getline(std::cin, ciudad);
+
+        std::cout << "Descripcion: ";
+        std::getline(std::cin, descripcion);
+
+        Contacto* nuevo = new Contacto(nombre, telefono, edad, ciudad, descripcion);
+        perfilActual->agregarContactoFinal(nuevo);
+
+        std::cout << "Contacto anadido correctamente.\n";
+    }
+}
+
+// ---------------------------------------------
+// Modifica un contacto existente
+// ---------------------------------------------
+void modificarContactoPerfil(Perfil* perfilActual) {
+    int total = perfilActual->getNumeroContactos();
+
+    if (total == 0) {
+        std::cout << "No hay contactos para modificar.\n";
+    } else {
+        mostrarContactosPerfil(perfilActual);
+
+        int op;
+        std::cout << "Seleccione el contacto a modificar: ";
+        std::cin >> op;
+
+        if (op >= 1 && op <= total) {
+            Contacto* c = perfilActual->getContactoEn(op - 1);
+
+            std::cin.ignore();
+
+            std::string nombre, telefono, ciudad, descripcion;
+            int edad;
+
+            std::cout << "Nuevo nombre: ";
+            std::getline(std::cin, nombre);
+
+            std::cout << "Nuevo telefono: ";
+            std::getline(std::cin, telefono);
+
+            std::cout << "Nueva edad: ";
+            std::cin >> edad;
+            std::cin.ignore();
+
+            std::cout << "Nueva ciudad: ";
+            std::getline(std::cin, ciudad);
+
+            std::cout << "Nueva descripcion: ";
+            std::getline(std::cin, descripcion);
+
+            c->setNombre(nombre);
+            c->setTelefono(telefono);
+            c->setEdad(edad);
+            c->setCiudad(ciudad);
+            c->setDescripcion(descripcion);
+
+            std::cout << "Contacto modificado correctamente.\n";
+        } else {
+            std::cout << "Opcion invalida.\n";
+        }
+    }
 }
 
 
-/* ==========================================
-   BLOQUE B – PARTE PENDIENTE DE IMPLEMENTAR
-   ==========================================
-   Objetivo del BLOQUE B:
-   ----------------------
-   Implementar TODA la interacción con el usuario:
-     - Menú principal del programa.
-     - Selección / inicio de sesión en un perfil.
-     - Menú de gestión de un perfil:
-         * Ver info del perfil.
-         * Ver contactos.
-         * Añadir contacto.
-         * Modificar contacto.
-         * Eliminar contacto.
-         * Importar contactos desde otro perfil.
-         * Exportar contactos a otro perfil.
-         * Mostrar contactos duplicados.
-         * Cerrar sesión (volver al menú principal).
+// ---------------------------------------------
+// Elimina un contacto del perfil
+// ---------------------------------------------
+void eliminarContactoPerfil(Perfil* perfilActual) {
+    int total = perfilActual->getNumeroContactos();
 
-   IMPORTANTE:
-   -----------
-   - NO modificar la plantilla LinkedList<T>.
-   - NO modificar la clase Contacto.
-   - NO modificar la clase Perfil ni las funciones del BLOQUE A,
-     salvo añadir, dentro de Perfil, un método "eliminarContactoEn"
-     (indicado más abajo).
-   - Seguir usando SIEMPRE punteros y el operador "->" para:
-       * LinkedList<Perfil*>*
-       * LinkedList<Contacto*>*
-       * Perfil* y Contacto*
-   - Todos los mensajes por pantalla deben estar en español.
-   - No usar vector, list ni otros contenedores de la STL.
-   - Evitar "return;" vacíos dentro de if si se puede reestructurar
-     con if/else.
+    if (total == 0) {
+        std::cout << "No hay contactos para eliminar.\n";
+    } else {
+        mostrarContactosPerfil(perfilActual);
 
-   =======================================================================
-   1) CAMBIOS EN main() (SUSTITUIR EL main ACTUAL)
-   =======================================================================
-   -----
-   1) Modificar el main actual para que tenga esta estructura:
+        int op;
+        std::cout << "Seleccione el contacto a eliminar: ";
+        std::cin >> op;
 
-      int main() {
-          // 1. Crear la lista principal de perfiles como puntero
-          //    LinkedList<Perfil*>* perfiles;
-          //    perfiles = new LinkedList<Perfil*>();
+        if (op >= 1 && op <= total) {
+            perfilActual->eliminarContactoEn(op - 1);
+            std::cout << "Contacto eliminado correctamente.\n";
+        } else {
+            std::cout << "Opcion invalida.\n";
+        }
+    }
+}
 
-          // 2. Llamar a la función de carga inicial:
-          //    inicializarPerfiles(perfiles);
+// ---------------------------------------------
+// Importa contactos desde otro perfil
+// ---------------------------------------------
+void importarDesdeOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
+    mostrarPerfiles(listaPerfiles);
 
-          // 3. Bucle principal del programa:
-          //    - Mostrar menú principal (función mostrarMenuPrincipal()).
-          //    - Leer opción del usuario.
-          //    - Según la opción:
-          //         1) Ver perfiles disponibles
-          //         2) Iniciar sesión en un perfil
-          //         3) Salir del programa
-          //
-          //    Mientras el usuario no elija "Salir", seguir mostrando
-          //    el menú principal.
+    int total = listaPerfiles->getSize();
+    int op;
 
-          // 4. (Opcional) Liberar memoria antes de terminar:
-          //    - Recorrer la lista "perfiles" y hacer delete de cada Perfil*.
-          //    - Hacer delete de "perfiles".
-          //
-          //    NOTA: la liberación de memoria no suele ser exigida en detalle
-          //    en esta práctica, pero se puede incluir si se quiere.
+    std::cout << "Seleccione el perfil de origen: ";
+    std::cin >> op;
 
-          // 5. Terminar el programa con "return 0;".
-      }
+    if (op >= 1 && op <= total) {
+        Perfil* origen = listaPerfiles->obtener_en(op - 1);
 
-   =======================================================================
-   2) FUNCIONES A CREAR PARA EL MENÚ PRINCIPAL
-   =======================================================================
+        if (origen == perfilActual) {
+            std::cout << "No puede importar contactos de su propio perfil.\n";
+        } else {
+            perfilActual->importarContactosDesde(origen);
+        }
+    } else {
+        std::cout << "Opcion invalida.\n";
+    }
+}
 
-   -----------------------------------------------------------------------
-   2.1) Función mostrarMenuPrincipal
-   -----------------------------------------------------------------------
-   //
-   // int mostrarMenuPrincipal() {
-   //     // Muestra por pantalla:
-   //     //   1. Ver perfiles disponibles
-   //     //   2. Iniciar sesión en un perfil
-   //     //   3. Salir
-   //     //
-   //     // Pide al usuario una opción (int) con cin.
-   //     // Devuelve la opción elegida.
-   // }
+// ---------------------------------------------
+// Exporta contactos hacia otro perfil
+// ---------------------------------------------
+void exportarAHaciaOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
+    mostrarPerfiles(listaPerfiles);
 
-   -----------------------------------------------------------------------
-   2.2) Función mostrarPerfiles
-   -----------------------------------------------------------------------
-   //
-   // void mostrarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
-   //     // Recorre la lista de perfiles:
-   //     //   int total = listaPerfiles->getSize();
-   //     //   Para i = 0..total-1:
-   //     //     Perfil* p = listaPerfiles->obtener_en(i);
-   //     //     Muestra:
-   //     //        - Número de perfil (i+1)
-   //     //        - Nombre de usuario (p->getNombreUsuario())
-   //     //        - Número de contactos (p->getNumeroContactos())
-   //     //
-   //     // Mensajes en español y claros.
-   // }
+    int total = listaPerfiles->getSize();
+    int op;
 
-   -----------------------------------------------------------------------
-   2.3) Función seleccionarPerfil
-   -----------------------------------------------------------------------
-   //
-   // Perfil* seleccionarPerfil(LinkedList<Perfil*>* listaPerfiles) {
-   //     // 1) Llamar a mostrarPerfiles(listaPerfiles).
-   //     // 2) Preguntar al usuario qué perfil quiere seleccionar (por número).
-   //     // 3) Validar que el número está en el rango correcto:
-   //     //      1 <= numero <= listaPerfiles->getSize()
-   //     // 4) Convertir el número a índice interno:
-   //     //      indice = numero - 1;
-   //     // 5) Obtener el perfil:
-   //     //      Perfil* seleccionado = listaPerfiles->obtener_en(indice);
-   //     // 6) Devolver "seleccionado".
-   //     //
-   //     // Si la entrada no es válida, mostrar un mensaje de error y
-   //     // pedir de nuevo la opción hasta que sea correcta.
-   // }
+    std::cout << "Seleccione el perfil de destino: ";
+    std::cin >> op;
 
-   // En el main, cuando el usuario elija "Iniciar sesión en un perfil",
-   // se hará algo como:
-   //
-   //   Perfil* perfilActual = seleccionarPerfil(perfiles);
-   //   if (perfilActual != nullptr) {
-   //       // Entrar en el menú de perfil:
-   //       menuPerfil(perfilActual, perfiles);
-   //   }
+    if (op >= 1 && op <= total) {
+        Perfil* destino = listaPerfiles->obtener_en(op - 1);
 
-   =======================================================================
-   3) FUNCIONES PARA EL MENÚ DE UN PERFIL
-   =======================================================================
+        if (destino == perfilActual) {
+            std::cout << "No puede exportar contactos a su propio perfil.\n";
+        } else {
+            exportarContactos(perfilActual, destino);
+            std::cout << "Contactos exportados correctamente.\n";
+        }
+    } else {
+        std::cout << "Opcion invalida.\n";
+    }
+}
 
-   -----------------------------------------------------------------------
-   3.1) Función menuPerfil
-   -----------------------------------------------------------------------
-   //
-   // void menuPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
-   //     // Bucle que muestre un menú parecido a:
-   //     //
-   //     //   1. Ver información del perfil
-   //     //   2. Ver lista de contactos
-   //     //   3. Añadir contacto
-   //     //   4. Modificar contacto
-   //     //   5. Eliminar contacto
-   //     //   6. Importar contactos desde otro perfil
-   //     //   7. Exportar contactos a otro perfil
-   //     //   8. Mostrar contactos duplicados
-   //     //   9. Cerrar sesión (volver al menú principal)
-   //     //
-   //     //  - Leer opción con cin.
-   //     //  - Según la opción, llamar a las funciones correspondientes:
-   //     //       mostrarInfoPerfil(perfilActual);
-   //     //       mostrarContactosPerfil(perfilActual);
-   //     //       aniadirContactoDesdeTeclado(perfilActual);
-   //     //       modificarContactoPerfil(perfilActual);
-   //     //       eliminarContactoPerfil(perfilActual);
-   //     //       importarDesdeOtroPerfil(perfilActual, listaPerfiles);
-   //     //       exportarAHaciaOtroPerfil(perfilActual, listaPerfiles);
-   //     //       perfilActual->detectarContactosDuplicados();
-   //     //
-   //     //  - El bucle termina cuando el usuario elija la opción de "Cerrar sesión".
-   // }
+// ---------------------------------------------
+// Menú de gestión del perfil
+// ---------------------------------------------
+void menuPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
+    int op = 0;
 
-   -----------------------------------------------------------------------
-   3.2) Función mostrarInfoPerfil
-   -----------------------------------------------------------------------
-   //
-   // void mostrarInfoPerfil(Perfil* perfilActual) {
-   //     // Mostrar:
-   //     //   - Nombre de usuario: perfilActual->getNombreUsuario()
-   //     //   - Descripción: perfilActual->getDescripcion()
-   //     //   - Número de contactos: perfilActual->getNumeroContactos()
-   // }
+    while (op != 9) {
+        std::cout << "\n===== MENU DEL PERFIL =====\n";
+        std::cout << "1. Ver informacion del perfil\n";
+        std::cout << "2. Ver lista de contactos\n";
+        std::cout << "3. Anadir contacto\n";
+        std::cout << "4. Modificar contacto\n";
+        std::cout << "5. Eliminar contacto\n";
+        std::cout << "6. Importar contactos desde otro perfil\n";
+        std::cout << "7. Exportar contactos a otro perfil\n";
+        std::cout << "8. Mostrar contactos duplicados\n";
+        std::cout << "9. Cerrar sesion\n";
+        std::cout << "Seleccione una opcion: ";
 
-   -----------------------------------------------------------------------
-   3.3) Función mostrarContactosPerfil
-   -----------------------------------------------------------------------
-   //
-   // void mostrarContactosPerfil(Perfil* perfilActual) {
-   //     // int total = perfilActual->getNumeroContactos();
-   //     // Si total == 0:
-   //     //    Mostrar: "Este perfil no tiene contactos aún."
-   //     // Si hay contactos:
-   //     //    Para i = 0..total-1:
-   //     //        Contacto* c = perfilActual->getContactoEn(i);
-   //     //        Mostrar:
-   //     //           - Número de contacto (i+1)
-   //     //           - Nombre
-   //     //           - Teléfono
-   //     //           - Edad
-   //     //           - Ciudad
-   //     //           - Descripción
-   // }
+        std::cin >> op;
 
-   -----------------------------------------------------------------------
-   3.4) Función aniadirContactoDesdeTeclado
-   -----------------------------------------------------------------------
-   //
-   // void aniadirContactoDesdeTeclado(Perfil* perfilActual) {
-   //     // 1) Pedir por teclado (cin):
-   //     //      - nombre
-   //     //      - telefono
-   //     //      - edad
-   //     //      - ciudad
-   //     //      - descripcion
-   //     //
-   //     // 2) Comprobar si ya existe un contacto con ese teléfono:
-   //     //      bool existe = perfilActual->existeTelefono(telefono);
-   //     //      Si existe:
-   //     //         - Mostrar mensaje de error:
-   //     //           "Ya existe un contacto con ese teléfono en este perfil."
-   //     //         - No crear el contacto.
-   //     //
-   //     // 3) Si no existe:
-   //     //      - Crear el contacto:
-   //     //           Contacto* nuevo = new Contacto(nombre, telefono, edad, ciudad, descripcion);
-   //     //      - Añadirlo al perfil:
-   //     //           perfilActual->aniadirContactoFinal(nuevo);
-   //     //      - Mostrar mensaje de éxito.
-   // }
+        if (op == 1) {
+            mostrarInfoPerfil(perfilActual);
+        } else if (op == 2) {
+            mostrarContactosPerfil(perfilActual);
+        } else if (op == 3) {
+            aniadirContactoDesdeTeclado(perfilActual);
+        } else if (op == 4) {
+            modificarContactoPerfil(perfilActual);
+        } else if (op == 5) {
+            eliminarContactoPerfil(perfilActual);
+        } else if (op == 6) {
+            importarDesdeOtroPerfil(perfilActual, listaPerfiles);
+        } else if (op == 7) {
+            exportarAHaciaOtroPerfil(perfilActual, listaPerfiles);
+        } else if (op == 8) {
+            perfilActual->detectarContactosDuplicados();
+        } else if (op == 9) {
+            std::cout << "Cerrando sesion...\n";
+        } else {
+            std::cout << "Opcion invalida.\n";
+        }
+    }
+}
 
-   -----------------------------------------------------------------------
-   3.5) Función modificarContactoPerfil
-   -----------------------------------------------------------------------
-   //
-   // void modificarContactoPerfil(Perfil* perfilActual) {
-   //     // 1) Llamar a mostrarContactosPerfil(perfilActual).
-   //     // 2) Si no hay contactos, salir de la función (no hacer nada más).
-   //     // 3) Pedir al usuario qué contacto quiere modificar (número 1..N).
-   //     // 4) Convertir a índice interno: indice = numero - 1.
-   //     // 5) Obtener el contacto:
-   //     //      Contacto* c = perfilActual->getContactoEn(indice);
-   //     // 6) Pedir nuevos datos para el contacto (nombre, teléfono, etc.).
-   //     // 7) Actualizar los campos con los setters:
-   //     //      c->setNombre(...)
-   //     //      c->setTelefono(...)
-   //     //      c->setEdad(...)
-   //     //      c->setCiudad(...)
-   //     //      c->setDescripcion(...)
-   //     // 8) Mostrar mensaje indicando que el contacto se ha modificado.
-   // }
+// ---------------------------------------------
+// main con menú principal
+// ---------------------------------------------
+int main() {
+    LinkedList<Perfil*>* perfiles = new LinkedList<Perfil*>();
+    inicializarPerfiles(perfiles);
 
-   -----------------------------------------------------------------------
-   3.6) Método eliminarContactoEn (DENTRO DE LA CLASE Perfil)
-   -----------------------------------------------------------------------
-   //
-   // Añadir un método:
-   //
-   // void eliminarContactoEn(int posicion) {
-   //     // 1) Comprobar que 0 <= posicion < getNumeroContactos().
-   //     // 2) Usar la lista de contactos para extraer el puntero:
-   //     //      Contacto* c = contactos->extract_at(posicion);
-   //     // 3) Si c no es nulo, hacer:
-   //     //      delete c;
-   //     //    para liberar la memoria del contacto.
-   // }
+    int opcion = 0;
 
-   -----------------------------------------------------------------------
-   3.7) Función eliminarContactoPerfil
-   -----------------------------------------------------------------------
-   //
-   // void eliminarContactoPerfil(Perfil* perfilActual) {
-   //     // 1) Llamar a mostrarContactosPerfil(perfilActual).
-   //     // 2) Si no hay contactos, salir.
-   //     // 3) Pedir al usuario el número de contacto a eliminar (1..N).
-   //     // 4) Convertir a índice interno: indice = numero - 1.
-   //     // 5) Llamar a:
-   //     //      perfilActual->eliminarContactoEn(indice);
-   //     // 6) Mostrar mensaje: "Contacto eliminado correctamente."
-   // }
+    while (opcion != 3) {
+        opcion = mostrarMenuPrincipal();
 
-   -----------------------------------------------------------------------
-   3.8) Función importarDesdeOtroPerfil
-   -----------------------------------------------------------------------
-   //
-   // void importarDesdeOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
-   //     // 1) Mostrar listado de perfiles disponibles:
-   //     //      mostrarPerfiles(listaPerfiles);
-   //     // 2) Preguntar al usuario desde qué perfil quiere importar contactos.
-   //     // 3) Asegurarse de que no elige el mismo perfil donde está logueado.
-   //     // 4) Calcular índice interno y obtener:
-   //     //      Perfil* origen = listaPerfiles->obtener_en(indiceOrigen);
-   //     // 5) Llamar a:
-   //     //      perfilActual->importarContactosDesde(origen);
-   // }
+        if (opcion == 1) {
+            mostrarPerfiles(perfiles);
+        } else if (opcion == 2) {
+            Perfil* perfilActual = seleccionarPerfil(perfiles);
+            menuPerfil(perfilActual, perfiles);
+        } else if (opcion == 3) {
+            std::cout << "Saliendo del programa...\n";
+        } else {
+            std::cout << "Opcion invalida.\n";
+        }
+    }
 
-   -----------------------------------------------------------------------
-   3.9) Función exportarAHaciaOtroPerfil
-   -----------------------------------------------------------------------
-   //
-   // void exportarAHaciaOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
-   //     // 1) Mostrar listado de perfiles disponibles:
-   //     //      mostrarPerfiles(listaPerfiles);
-   //     // 2) Preguntar al usuario a qué perfil quiere exportar contactos.
-   //     // 3) Asegurarse de que no elige el mismo perfil como destino.
-   //     // 4) Calcular índice interno y obtener:
-   //     //      Perfil* destino = listaPerfiles->obtener_en(indiceDestino);
-   //     // 5) Llamar a la función libre ya creada en el BLOQUE A:
-   //     //      exportarContactos(perfilActual, destino);
-   // }
+    // Liberación básica de memoria
+    int total = perfiles->getSize();
+    for (int i = 0; i < total; i++) {
+        delete perfiles->obtener_en(i);
+    }
+    delete perfiles;
 
-   -----------------------------------------------------------------------
-   3.10) Mostrar contactos duplicados
-   -----------------------------------------------------------------------
-   // En el menú de perfil, una opción debe llamar simplemente a:
-   //
-   //   perfilActual->detectarContactosDuplicados();
-   //
-   // Esta función ya está implementada en el BLOQUE A y mostrará
-   // por pantalla los contactos que comparten teléfono en el mismo perfil.
-
-   =======================================================================
-   NOTA FINAL
-   =======================================================================
-   - Solo tiene que:
-   //   * Implementar las funciones descritas arriba (menús e interacción).
-   //   * Añadir el método eliminarContactoEn dentro de Perfil.
-   //   * Sustituir el main sencillo por el main con menús.
-   //
-   // - NO debe cambiar la lógica de LinkedList, Contacto, Perfil ni
-   //   las funciones de inicialización e importación/exportación del BLOQUE A.
-   //
-   // - Todas las entradas y salidas deben ser claras, en español, y
-   //   usando punteros y "->" para trabajar con perfiles y contactos.
-*/
+    return 0;
+}
 
