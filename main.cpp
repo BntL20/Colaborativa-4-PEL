@@ -641,7 +641,7 @@ void mostrarContactosPerfil(Perfil* perfilActual) {
 }
 
 // Añade un contacto leyendo los datos por teclado
-void aniadirContactoDesdeTeclado(Perfil* perfilActual) {
+void agregarContactoDesdeTeclado(Perfil* perfilActual) {
     std::string nombre, telefono, ciudad, descripcion;
     int edad;
 
@@ -816,7 +816,7 @@ void menuPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
         } else if (op == 2) {
             mostrarContactosPerfil(perfilActual);
         } else if (op == 3) {
-            aniadirContactoDesdeTeclado(perfilActual);
+            agregarContactoDesdeTeclado(perfilActual);
         } else if (op == 4) {
             modificarContactoPerfil(perfilActual);
         } else if (op == 5) {
