@@ -1,3 +1,28 @@
+/*
+* Proyecto : Enlistando perfiles con listas enlazadas
+ * Asignatura: Programación con estructuras lineales
+ * Descripción:
+ *   Aplicación de consola que simula una agenda de contactos con varios
+ *   perfiles de usuario. Cada perfil tiene su propia lista de contactos,
+ *   donde se guarda nombre, teléfono, edad, ciudad y una breve descripción.
+ *
+ *   El programa permite:
+ *     - Mostrar los perfiles disponibles e iniciar sesión en uno de ellos.
+ *     - Consultar, añadir, modificar y eliminar contactos de un perfil.
+ *     - Importar contactos desde otro perfil evitando teléfonos duplicados.
+ *     - Exportar los contactos de un perfil a otro.
+ *     - Detectar contactos duplicados dentro de un mismo perfil.
+ *
+ *   Todas las estructuras de datos se han implementado usando únicamente
+ *   punteros y una lista enlazada propia (plantilla LinkedList<T>), sin
+ *   utilizar contenedores estándar de C++ como vector o list. Perfiles y
+ *   contactos se crean dinámicamente con new y se gestionan mediante punteros.
+ *
+ * Autor/es:  Brent Delgado Ravichagua, Lucía Sánchez Grande
+ * Grupo    : Grupo 5
+ * Fecha    : 14/12/2025
+ */
+
 #include <iostream>
 #include <string>
 
@@ -491,7 +516,6 @@ public:
         }
     }
 
-    // NUEVO METODO DEL BLOQUE B (único permitido agregar aquí)
     // Elimina un contacto por posición y libera memoria
     void eliminarContactoEn(int posicion) {
         if (posicion >= 0 && posicion < getNumeroContactos()) {
@@ -543,12 +567,8 @@ void inicializarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
     listaPerfiles->insertar_cola(p3);
 }
 
-// BLOQUE B
 
-//---------------------------
 // Muestra el menú principal
-//--------------------------
-
 int mostrarMenuPrincipal() {
     std::cout << "\n===== MENU PRINCIPAL =====\n";
     std::cout << "1. Ver perfiles disponibles\n";
@@ -561,9 +581,7 @@ int mostrarMenuPrincipal() {
     return op;
 }
 
-// --------------------------
 // Muestra todos los perfiles
-// --------------------------
 void mostrarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
     std::cout << "\n=== PERFILES DISPONIBLES ===\n";
 
@@ -575,9 +593,7 @@ void mostrarPerfiles(LinkedList<Perfil*>* listaPerfiles) {
     }
 }
 
-// -------------------------------
 // Permite seleccionar un perfil
-// -------------------------------
 Perfil* seleccionarPerfil(LinkedList<Perfil*>* listaPerfiles) {
     mostrarPerfiles(listaPerfiles);
 
@@ -594,9 +610,9 @@ Perfil* seleccionarPerfil(LinkedList<Perfil*>* listaPerfiles) {
 
         std::cout << "Opcion invalida.\n" << std::endl;
     }
-}// ---------------------------------------------
+}
+
 // Muestra la información básica del perfil
-// ---------------------------------------------
 void mostrarInfoPerfil(Perfil* perfilActual) {
     std::cout << "\n=== INFORMACION DEL PERFIL ===\n";
     std::cout << "Usuario: " << perfilActual->getNombreUsuario() << std::endl;
@@ -604,9 +620,7 @@ void mostrarInfoPerfil(Perfil* perfilActual) {
     std::cout << "Numero de contactos: " << perfilActual->getNumeroContactos() << std::endl;
 }
 
-// ---------------------------------------------
 // Muestra todos los contactos de un perfil
-// ---------------------------------------------
 void mostrarContactosPerfil(Perfil* perfilActual) {
     int total = perfilActual->getNumeroContactos();
 
@@ -626,9 +640,7 @@ void mostrarContactosPerfil(Perfil* perfilActual) {
     }
 }
 
-// ---------------------------------------------
 // Añade un contacto leyendo los datos por teclado
-// ---------------------------------------------
 void aniadirContactoDesdeTeclado(Perfil* perfilActual) {
     std::string nombre, telefono, ciudad, descripcion;
     int edad;
@@ -657,13 +669,11 @@ void aniadirContactoDesdeTeclado(Perfil* perfilActual) {
         Contacto* nuevo = new Contacto(nombre, telefono, edad, ciudad, descripcion);
         perfilActual->agregarContactoFinal(nuevo);
 
-        std::cout << "Contacto anadido correctamente.\n";
+        std::cout << "Contacto agregado correctamente.\n";
     }
 }
 
-// ---------------------------------------------
 // Modifica un contacto existente
-// ---------------------------------------------
 void modificarContactoPerfil(Perfil* perfilActual) {
     int total = perfilActual->getNumeroContactos();
 
@@ -713,10 +723,7 @@ void modificarContactoPerfil(Perfil* perfilActual) {
     }
 }
 
-
-// ---------------------------------------------
 // Elimina un contacto del perfil
-// ---------------------------------------------
 void eliminarContactoPerfil(Perfil* perfilActual) {
     int total = perfilActual->getNumeroContactos();
 
@@ -738,9 +745,7 @@ void eliminarContactoPerfil(Perfil* perfilActual) {
     }
 }
 
-// ---------------------------------------------
 // Importa contactos desde otro perfil
-// ---------------------------------------------
 void importarDesdeOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
     mostrarPerfiles(listaPerfiles);
 
@@ -763,9 +768,7 @@ void importarDesdeOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPer
     }
 }
 
-// ---------------------------------------------
 // Exporta contactos hacia otro perfil
-// ---------------------------------------------
 void exportarAHaciaOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
     mostrarPerfiles(listaPerfiles);
 
@@ -789,9 +792,7 @@ void exportarAHaciaOtroPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPe
     }
 }
 
-// ---------------------------------------------
 // Menú de gestión del perfil
-// ---------------------------------------------
 void menuPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
     int op = 0;
 
@@ -799,7 +800,7 @@ void menuPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
         std::cout << "\n===== MENU DEL PERFIL =====\n";
         std::cout << "1. Ver informacion del perfil\n";
         std::cout << "2. Ver lista de contactos\n";
-        std::cout << "3. Anadir contacto\n";
+        std::cout << "3. Agregar contacto\n";
         std::cout << "4. Modificar contacto\n";
         std::cout << "5. Eliminar contacto\n";
         std::cout << "6. Importar contactos desde otro perfil\n";
@@ -834,9 +835,7 @@ void menuPerfil(Perfil* perfilActual, LinkedList<Perfil*>* listaPerfiles) {
     }
 }
 
-// ---------------------------------------------
 // main con menú principal
-// ---------------------------------------------
 int main() {
     LinkedList<Perfil*>* perfiles = new LinkedList<Perfil*>();
     inicializarPerfiles(perfiles);
